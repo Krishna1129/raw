@@ -1,0 +1,68 @@
+{
+  "benchmark": {
+    "target_ms": 120,
+    "requests": 100,
+    "warmup_requests": 20,
+    "latency_unit": "ms",
+    "target_interpretation": "Measured objective, not a guarantee",
+    "http_scope": "In-process FastAPI TestClient round trip; excludes external network hop",
+    "shap_policy": "Included in complete processing and HTTP measurements",
+    "complete_processing_p95_under_target": false,
+    "http_round_trip_p95_under_target": false
+  },
+  "environment": {
+    "python_version": "3.14.8",
+    "platform": "Windows-11-10.0.26200-SP0",
+    "machine": "AMD64",
+    "processor": "Intel64 Family 6 Model 154 Stepping 3, GenuineIntel",
+    "model_artifact": "C:\\Users\\HP\\Desktop\\data\\raw\\drishti-ml-service\\models\\pipeline_with_preprocessor.pkl",
+    "artifact_version": "1.0.0"
+  },
+  "measurements": {
+    "model_only_classification": {
+      "measured_requests": 100,
+      "mean_ms": 45.484479999981886,
+      "median_ms": 42.46789999979228,
+      "p95_ms": 61.54270000010911,
+      "p99_ms": 72.92100699994542,
+      "max_ms": 87.36580000004324,
+      "includes_shap": false
+    },
+    "model_only_regression": {
+      "measured_requests": 100,
+      "mean_ms": 7.589900999978454,
+      "median_ms": 7.568800000171905,
+      "p95_ms": 8.238900000151261,
+      "p99_ms": 8.45606499990936,
+      "max_ms": 8.789200000137498,
+      "includes_shap": false
+    },
+    "shap_explanation": {
+      "measured_requests": 100,
+      "mean_ms": 104.22706400001971,
+      "median_ms": 103.42725000009523,
+      "p95_ms": 112.81764499990459,
+      "p99_ms": 120.57417699968943,
+      "max_ms": 130.48180000032517,
+      "includes_shap": true
+    },
+    "complete_prediction_processing": {
+      "measured_requests": 100,
+      "mean_ms": 198.4626729999718,
+      "median_ms": 179.612299999917,
+      "p95_ms": 319.5383299999321,
+      "p99_ms": 344.020238000062,
+      "max_ms": 369.74419999978636,
+      "includes_shap": true
+    },
+    "http_round_trip": {
+      "measured_requests": 100,
+      "mean_ms": 187.19235199998366,
+      "median_ms": 186.95069999989755,
+      "p95_ms": 197.14636500007146,
+      "p99_ms": 204.00567099997716,
+      "max_ms": 204.7056999999768,
+      "includes_shap": true
+    }
+  }
+}

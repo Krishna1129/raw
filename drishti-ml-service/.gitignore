@@ -1,0 +1,19 @@
+.venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.env
+logs/*
+!logs/.gitkeep
+*.tmp
+*.temp
+*.bak
+data/processed/*
+!data/processed/.gitkeep
+models/*
+!models/.gitkeep
+*.joblib
+*.pkl
+*.pickle
+*.onnx
+# The supplied source CSV is intentionally tracked; generated datasets belong in data/processed/.
