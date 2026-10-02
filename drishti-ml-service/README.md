@@ -8,6 +8,99 @@ automated tests. The current models were trained on the supplied synthetic
 dataset, so predictions and explanations require domain validation before
 operational use.
 
+## Handover summary
+
+This repository contains the working DRISHTI backend, trained model artifact,
+source dataset, tests, benchmark reports, and a React/Vite frontend. The
+backend and frontend are separate applications and communicate over HTTP.
+
+The current trained artifact is:
+
+```text
+models\pipeline_with_preprocessor.pkl
+```
+
+It is a trusted Joblib/Pickle bundle containing:
+
+- A fitted preprocessing pipeline and `RandomForestClassifier` for
+  `delay_risk_level`.
+- A fitted preprocessing pipeline and `XGBRegressor` wrapped by
+  `ClippedRegressor` for the continuous `risk_probability` score.
+- Feature metadata, class labels, selected model names, metrics, and version
+  information.
+
+The API loads this artifact once during FastAPI lifespan startup through
+`src.model_bundle.load_model_bundle`. `/predict` reuses the loaded pipelines
+and SHAP explainer; it does not train or reload the model per request.
+
+The artifact and source CSV are intentionally retained for this handover. The
+artifact is explicitly unignored in `.gitignore`; review the team's policy for
+committing binary model files before publishing the repository.
+
+## Repository structure
+
+```text
+api/          FastAPI application, schemas, dependencies, error handlers
+src/          preprocessing, training, evaluation, model bundle, explainability
+data/raw/     supplied training CSV
+models/       trained inference artifact
+reports/      evaluation and latency reports
+tests/        backend unit and integration tests
+scripts/      inference benchmark
+frontend/     React/Vite application that calls POST /predict
+logs/         reserved runtime log directory
+```
+
+## Current API
+
+- `GET /health` - liveness check.
+- `GET /ready` - confirms the artifact and SHAP explainer are loaded.
+- `POST /predict` - accepts exactly the fitted 18-feature input contract and
+  returns the risk class, continuous score, up to three model-attributed
+  factors, and model version.
+- `/docs` - interactive OpenAPI documentation.
+
+The frontend uses `VITE_API_BASE_URL` and defaults to
+`http://127.0.0.1:8000`. Configure backend CORS with
+`DRISHTI_CORS_ORIGINS` when using a deployed frontend.
+
+## Frontend setup
+
+The frontend is maintained in `frontend/` and must be started separately:
+
+```powershell
+Set-Location C:\Users\HP\Desktop\data\raw\drishti-ml-service\frontend
+npm install
+npm run dev
+```
+
+For a production build:
+
+```powershell
+npm run build
+npm run preview
+```
+
+Set `VITE_API_BASE_URL` in `frontend\.env` or in the frontend deployment
+environment. See [frontend/README.md](./frontend/README.md) for Vercel
+deployment instructions.
+
+## Handover items requiring attention
+
+- The models were trained on synthetic data and are not validated for
+  production or real-world predictive validity.
+- Explanation-enabled p95 latency exceeded the 120 ms measured objective on
+  the recorded Windows test machine. Consider an explicit optional explanation
+  flag or separate explanation endpoint before production scaling.
+- The frontend currently stores assessment history only in browser
+  `sessionStorage`; it has no user accounts, persistent project database, or
+  server-side history.
+- The model artifact uses Python pickle/Joblib deserialization. Load only
+  trusted artifacts and keep Python/scikit-learn/XGBoost versions compatible
+  with the recorded bundle metadata.
+- This workspace has no `.git` directory. Git initialization, remote setup,
+  branch policy, and artifact storage policy remain team-lead responsibilities.
+
 ## Windows PowerShell quick start
 
 Run all commands from the project root:

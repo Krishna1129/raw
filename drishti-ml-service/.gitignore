@@ -1,7 +1,13 @@
 .venv/
+venv/
+.env/
 __pycache__/
 *.py[cod]
 .pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
 .env
 logs/*
 !logs/.gitkeep
@@ -10,10 +16,21 @@ logs/*
 *.bak
 data/processed/*
 !data/processed/.gitkeep
+# Keep the current inference artifact available for handover. Other model
+# artifacts remain ignored unless explicitly unignored.
 models/*
 !models/.gitkeep
 *.joblib
 *.pkl
 *.pickle
 *.onnx
+*.pt
+*.pth
+*.sav
+!models/pipeline_with_preprocessor.pkl
+frontend/node_modules/
+frontend/dist/
+frontend/.env
+frontend/.env.*
+!frontend/.env.example
 # The supplied source CSV is intentionally tracked; generated datasets belong in data/processed/.
